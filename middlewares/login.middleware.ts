@@ -1,8 +1,11 @@
 import { type Request, type Response, type NextFunction } from 'express';
+import { verifyToken } from '../utils/jwt';
 
-export function isUserLoggedIn(req: Request, res: Response, next: NextFunction): void {
+export async function isUserLoggedIn(req: Request, res: Response, next: NextFunction) {
     const header = req.headers['authorization'];
-    if (header && header.includes('Bearer')) {
+    const token = header && header.split(' ')[1];
+
+    if (header?.includes('Bearer') && token && await verifyToken(token)) {
         next();
     } else {
         res.status(401).json({ message: 'Unauthorized' });
