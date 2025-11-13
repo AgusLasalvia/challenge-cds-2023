@@ -10,7 +10,7 @@ export async function generateJWT(userId: string): Promise<string> {
     return token;
 }
 
-export async function verificarToken(token: string): Promise<boolean> {
+export async function verifyToken(token: string): Promise<boolean> {
     try {
         await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
         return true;

@@ -1,13 +1,51 @@
 import { type Request, type Response } from 'express';
-import * as UserCore from '../core/User';
+import UserRepository from '../repositories/user.repository';
+import { comparePassword } from '../utils/bcrypt';
+import { generateJWT } from '../utils/jwt';
+import { SuccessfulLoginDTO } from '../DTO/userDTO';
 
 export default class UserController {
     public static userRegister(): void {
         console.log('User registration endpoint');
     }
 
-    public static createUser(req:Request,res:Response):void{
+    // Implementing createUser and loginUser methods
+    public static createUser(req: Request, res: Response): void {
         const { _id, firstName, lastName, password } = req.body;
-        
+        UserRepository.addUser({ _id, firstName, lastName, password })
+            .then((newUser) => {
+                if (!newUser) {
+                    return res.status(400).json({ message: 'Error creating user' });
+                }
+                return res.status(201).json({ message: 'User created successfully', user: newUser });
+            })
+    }
+
+
+    public static async loginUser(req: Request, res: Response) {
+        const { email, password } = req.body;
+        try {
+            // Find the user by email
+            const user = await UserRepository.findByEmail(email);
+
+            // if null user, return 404
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Compare passwords
+            if (await comparePassword(password, user.password)) {
+                const token = await generateJWT(user._id);
+
+                // Create response DTO without the password
+                const responseData = new SuccessfulLoginDTO(user.email, user.firstName, user.lastName, token);
+
+                // Successful login
+                return res.status(200).json({ message: 'Login successful', data: responseData });
+            }
+        } catch (error) {
+            // Handle any unexpected errors with 500 server error
+            return res.status(500).json({ message: 'Internal server error' });
+        }
     }
 }
