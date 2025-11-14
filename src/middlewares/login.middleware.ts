@@ -1,5 +1,5 @@
 import { type Request, type Response, type NextFunction } from 'express';
-import { verifyToken } from '../utils/jwt';
+import { verifyToken } from '../utils/jwt.js';
 
 export async function isUserLoggedIn(req: Request, res: Response, next: NextFunction) {
     const header = req.headers['authorization'];

@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 
-import UserRepository from '../repositories/user.repository';
+import UserRepository from '../repositories/user.repository.js';
 
-import { generateJWT } from '../utils/jwt';
-import { SuccessfulLoginDTO } from '../DTO/user.dto';
-import { comparePassword, hashPassword } from '../utils/bcrypt';
+import { generateJWT } from '../utils/jwt.js';
+import { SuccessfulLoginDTO } from '../DTO/user.dto.js';
+import { comparePassword, hashPassword } from '../utils/bcrypt.js';
 
 export default class UserController {
 

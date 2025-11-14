@@ -1,4 +1,4 @@
-import UserModel from "../models/user.model";
+import UserModel from "../models/user.model.js";
 
 export default class UserRepository {
     public static async addUser(userBody: any): Promise<any> {

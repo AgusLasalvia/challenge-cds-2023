@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { config } from 'dotenv';
 
 // import routes
-import userRoutes from './routes/user.routes';
+import userRoutes from './routes/user.routes.js';
 
 // Load environment variables from .env file
 config()
