@@ -24,7 +24,7 @@ export default class UserController {
             const hashedPassword: string = await hashPassword(password);
 
             // Save the new user to the database
-            UserRepository.addUser({ email, firstName, lastName, hashedPassword })
+            UserRepository.addUser({ email, firstName, lastName, password: hashedPassword })
                 .then((newUser) => {
                     // If user creation failed, return 400 Bad Request
                     if (!newUser) {
