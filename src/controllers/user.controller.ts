@@ -1,8 +1,10 @@
 import type { Request, Response } from 'express';
+
 import UserRepository from '../repositories/user.repository';
-import { comparePassword, hashPassword } from '../utils/bcrypt';
+
 import { generateJWT } from '../utils/jwt';
 import { SuccessfulLoginDTO } from '../DTO/user.dto';
+import { comparePassword, hashPassword } from '../utils/bcrypt';
 
 export default class UserController {
 
@@ -10,6 +12,14 @@ export default class UserController {
     public static async createUser(req: Request, res: Response) {
         const { email, firstName, lastName, password } = req.body;
         try {
+            // Search if the user already exists or the email exists
+            const existingVerification = await UserRepository.findByEmail(email);
+
+            // if exists, return 409 error
+            if (existingVerification) {
+                return res.status(409).json({ message: "User already exists" })
+            }
+
             // Hash the password before saving
             const hashedPassword: string = await hashPassword(password);
 
@@ -22,6 +32,7 @@ export default class UserController {
                     }
                     return res.status(201).json({ message: 'User created successfully', user: newUser });
                 })
+
         } catch (error) {
             // Handle any unexpected errors with 500 server error
             return res.status(500).json({ message: 'Internal server error' });
