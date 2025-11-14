@@ -11,6 +11,7 @@ config()
 //env variables
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/challenge-cds';
 const port = process.env.PORT || 3000;
+console.log('Mongo URI:', mongoURI);
 
 const app: Application = express();
 

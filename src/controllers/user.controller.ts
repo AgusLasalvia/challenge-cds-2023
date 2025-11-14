@@ -1,8 +1,8 @@
-import { type Request, type Response } from 'express';
+import type { Request, Response } from 'express';
 import UserRepository from '../repositories/user.repository';
 import { comparePassword, hashPassword } from '../utils/bcrypt';
 import { generateJWT } from '../utils/jwt';
-import { SuccessfulLoginDTO } from '../DTO/userDTO';
+import { SuccessfulLoginDTO } from '../DTO/user.dto';
 
 export default class UserController {
 
@@ -50,6 +50,8 @@ export default class UserController {
                 // Successful login
                 return res.status(200).json({ message: 'Login successful', data: responseData });
             }
+
+            return res.status(401).json({ message: 'Invalid credentials' });
         } catch (error) {
             // Handle any unexpected errors with 500 server error
             return res.status(500).json({ message: 'Internal server error' });
