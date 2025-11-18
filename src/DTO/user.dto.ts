@@ -9,7 +9,6 @@ export class CreateUserDTO {
     }
 }
 
-
 export class SuccessfulLoginDTO {
     constructor(
         public email: string,

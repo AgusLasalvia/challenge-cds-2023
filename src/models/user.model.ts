@@ -8,6 +8,6 @@ const userSchema = new Schema({
     password: { type: String, required: true },
 }, { timestamps: true })
 
-const UserModel = model('User', userSchema);
+const UserModel = model("User", userSchema);
 
 export default UserModel;

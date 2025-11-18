@@ -1,30 +1,31 @@
-import express, { type Application } from 'express';
-import mongoose from 'mongoose';
-import { config } from 'dotenv';
+import express, { type Application } from "express";
+import mongoose from "mongoose";
+import { config } from "dotenv";
 
 // import routes
-import userRoutes from './routes/user.routes.js';
+import userRoutes from "./routes/user.routes.js";
+import movieRoutes from "./routes/movie.routes.js"
 
 // Load environment variables from .env file
 config()
 
 //env variables
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/challenge-cds';
+const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/challenge-cds";
 const port = process.env.PORT || 3000;
-console.log('Mongo URI:', mongoURI);
 
 const app: Application = express();
 
 // Connect to MongoDB
 mongoose.connect(mongoURI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('Error connecting to MongoDB:', err));
+    .then(() => console.log("Connected to MongoDB"))
+    .catch((err) => console.error("Error connecting to MongoDB:", err));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
 // Use routes
-app.use('/api/users', userRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/movies", movieRoutes)
 
 // Start the server
 app.listen(port, () => {
