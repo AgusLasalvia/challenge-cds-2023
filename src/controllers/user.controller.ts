@@ -16,13 +16,12 @@ export default class UserController {
     try {
       const { email, firstName, lastName, password }: CreateUserDTO = req.body;
 
+      // Check if all fields arrived in the body
       if (!email || !firstName || !lastName || !password)
         return res.status(400).json({ message: "Missing requirements fields" });
 
       // Search if the user already exists or the email exists
       const existingVerification = await UserRepository.findByEmail(email);
-
-      // Check if all fields arrived in the body
 
       // if exists, return 409 error
       if (existingVerification) {
