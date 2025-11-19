@@ -16,8 +16,13 @@ export default class UserController {
     try {
       const { email, firstName, lastName, password }: CreateUserDTO = req.body;
 
+      if (!email || !firstName || !lastName || !password)
+        return res.status(400).json({ message: "Missing requirements fields" });
+
       // Search if the user already exists or the email exists
       const existingVerification = await UserRepository.findByEmail(email);
+
+      // Check if all fields arrived in the body
 
       // if exists, return 409 error
       if (existingVerification) {
@@ -28,18 +33,18 @@ export default class UserController {
       const hashedPassword: string = await hashPassword(password);
 
       // Save the new user to the database
-      UserRepository.addUser({
+      const newUser = await UserRepository.addUser({
         email,
         firstName,
         lastName,
         password: hashedPassword,
-      }).then((newUser) => {
-        // If user creation failed, return 400 Bad Request
-        if (!newUser) {
-          return res.status(400).json({ message: "Error creating user" });
-        }
-        return res.status(201).json({ message: "User created successfully" });
       });
+
+      // If user creation failed, return 400 Bad Request
+      if (!newUser)
+        return res.status(400).json({ message: "Error creating user" });
+
+      return res.status(201).json({ message: "User created successfully" });
     } catch (error) {
       // Handle any unexpected errors with 500 server error
       return res.status(500).json({ message: "Internal server error" });
