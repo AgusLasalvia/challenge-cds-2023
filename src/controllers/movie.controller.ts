@@ -1,17 +1,12 @@
-import { config } from "dotenv";
 import type { Request, Response } from "express";
-
-config();
-
-const API_URL = process.env.MOVIE_API_URL;
-const API_KEY = process.env.MOVIE_API_KEY!;
+import { MOVIE_API } from "../config/globalVariables.js";
 
 export default class MovieController {
   public static async getMovieByKeyword(req: Request, res: Response) {
     try {
       // Gets the keyword from the query params
       const keyword = req.query.keyword as string | undefined;
-      let url = `${API_URL}/search/movie`;
+      let url = `${MOVIE_API.API_URL}/search/movie`;
 
       if (keyword)
         url += `?query=${keyword}&include_adult=false&language=en-US&page=1`;
@@ -20,7 +15,7 @@ export default class MovieController {
       const response = await fetch(url, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${API_KEY}`,
+          Authorization: `Bearer ${MOVIE_API.API_KEY}`,
         },
       });
 
