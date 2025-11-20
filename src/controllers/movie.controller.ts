@@ -44,7 +44,6 @@ export default class MovieController {
       // Once finished, sends the data
       return res.status(200).json({ data: results });
     } catch (err) {
-      console.log(err);
       // Catch any unexpected error
       return res.status(500).json({ message: "Internal Server Error" });
     }
