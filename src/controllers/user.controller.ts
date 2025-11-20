@@ -33,9 +33,9 @@ export default class UserController {
 
       // Save the new user to the database
       const newUser = await UserRepository.addUser({
-        email,
-        firstName,
-        lastName,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
         password: hashedPassword,
       });
 

@@ -1,26 +1,26 @@
+import { config } from "dotenv";
 import type { Request, Response } from "express";
 
-const MOVIE_API_URL = process.env.API_URL!;
-const MOVIE_API_KEY = process.env.MOVIE_API_KEY!;
+config();
+
+const API_URL = process.env.MOVIE_API_URL;
+const API_KEY = process.env.MOVIE_API_KEY!;
 
 export default class MovieController {
   public static async getMovieByKeyword(req: Request, res: Response) {
     try {
       // Gets the keyword from the query params
       const keyword = req.query.keyword as string | undefined;
+      let url = `${API_URL}/search/movie`;
 
-      // If keyword is missing, return early
-      if (!keyword) {
-        return res
-          .status(400)
-          .json({ message: "Missing keyword query parameter" });
-      }
+      if (keyword)
+        url += `?query=${keyword}&include_adult=false&language=en-US&page=1`;
 
       // Fetch the data / consume the TMDB API
-      const response = await fetch(`${MOVIE_API_URL}?keyword=${keyword}`, {
+      const response = await fetch(url, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${MOVIE_API_KEY}`,
+          Authorization: `Bearer ${API_KEY}`,
         },
       });
 
@@ -33,17 +33,18 @@ export default class MovieController {
       const data = await response.json();
 
       // Get only the result key
-      let results = (data["result"] ?? []) as any[];
+      let results = (data["results"] ?? []) as any[];
 
       // For each movie, adds a random movie score
       results = results.map((movie: any) => ({
         ...movie,
-        score: this.getRandomMovieScore(),
+        score: MovieController.getRandomMovieScore(),
       }));
 
       // Once finished, sends the data
       return res.status(200).json({ data: results });
     } catch (err) {
+      console.log(err);
       // Catch any unexpected error
       return res.status(500).json({ message: "Internal Server Error" });
     }
