@@ -8,15 +8,17 @@ export default class MovieController {
       const keyword = req.query.keyword as string | undefined;
       let url: string = `${MOVIE_API.API_URL}`;
 
+      // Depending if there is a keyword, we will fetch the search results or the popular movies
       keyword
         ? (url += `/search/movie?query=${keyword}&page=1`)
-        : (url += `/movie/popular?page=1`);
+        : (url += `/movie/popular?page=1`); // by default I will fetch popular movies
 
       // Fetch the data / consume the TMDB API
       const response = await fetch(url, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${MOVIE_API.API_KEY}`,
+          "Content-Type": "application/json",
         },
       });
 
