@@ -6,10 +6,11 @@ export default class MovieController {
     try {
       // Gets the keyword from the query params
       const keyword = req.query.keyword as string | undefined;
-      let url = `${MOVIE_API.API_URL}/search/movie`;
+      let url: string = `${MOVIE_API.API_URL}`;
 
-      if (keyword)
-        url += `?query=${keyword}&include_adult=false&language=en-US&page=1`;
+      keyword
+        ? (url += `/search/movie?query=${keyword}&page=1`)
+        : (url += `/movie/popular?page=1`);
 
       // Fetch the data / consume the TMDB API
       const response = await fetch(url, {
